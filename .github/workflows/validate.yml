@@ -42,19 +42,14 @@ jobs:
         with:
           python-version: "3.14"
       - run: pip install homeassistant
-      - name: Installer les dépendances des composants Bluetooth de HA
+      - name: Installer à la demande les dépendances des composants HA importés
         run: |
-          python - <<'PY' > reqs.txt
-          import json, pathlib, homeassistant
-          base = pathlib.Path(homeassistant.__file__).parent / "components"
-          for comp in ("bluetooth", "bluetooth_adapters", "usb", "http", "frontend"):
-              manifest = base / comp / "manifest.json"
-              if manifest.exists():
-                  for req in json.loads(manifest.read_text()).get("requirements", []):
-                      print(req)
-          PY
-          cat reqs.txt
-          pip install -r reqs.txt
+          for i in $(seq 1 25); do
+            missing=$(python -c "import custom_components.miband.coordinator, custom_components.miband.config_flow" 2>&1 | sed -n "s/.*No module named '\([^'.]*\).*/\1/p" | tail -1)
+            [ -z "$missing" ] && break
+            echo "installation de $missing"
+            pip install -q "$(echo "$missing" | tr _ -)"
+          done
       - name: Importer tous les modules de l'intégration
         run: |
           pip show homeassistant | head -2
