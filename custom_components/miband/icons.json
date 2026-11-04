@@ -1,0 +1,67 @@
+{
+  "entity": {
+    "sensor": {
+      "steps": {
+        "default": "mdi:shoe-print"
+      },
+      "calories": {
+        "default": "mdi:fire"
+      },
+      "heart_rate": {
+        "default": "mdi:heart-pulse"
+      },
+      "heart_rate_min": {
+        "default": "mdi:heart-minus"
+      },
+      "heart_rate_max": {
+        "default": "mdi:heart-plus"
+      },
+      "heart_rate_avg": {
+        "default": "mdi:heart"
+      },
+      "sleep_total": {
+        "default": "mdi:sleep"
+      },
+      "sleep_deep": {
+        "default": "mdi:power-sleep"
+      },
+      "sleep_light": {
+        "default": "mdi:weather-night"
+      },
+      "sleep_rem": {
+        "default": "mdi:eye-refresh-outline"
+      },
+      "sleep_awake": {
+        "default": "mdi:eye-outline"
+      },
+      "sleep_start": {
+        "default": "mdi:bed-clock"
+      },
+      "sleep_end": {
+        "default": "mdi:alarm"
+      },
+      "last_sync": {
+        "default": "mdi:bluetooth-transfer"
+      }
+    },
+    "binary_sensor": {
+      "asleep": {
+        "default": "mdi:sleep-off",
+        "state": {
+          "on": "mdi:sleep"
+        }
+      },
+      "worn": {
+        "default": "mdi:watch-variant",
+        "state": {
+          "off": "mdi:watch-off"
+        }
+      }
+    },
+    "button": {
+      "sync": {
+        "default": "mdi:sync"
+      }
+    }
+  }
+}

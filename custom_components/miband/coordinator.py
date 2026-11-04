@@ -173,7 +173,7 @@ class MiBandCoordinator(DataUpdateCoordinator[MiBandData]):
 
             if state.firmware is None:
                 state.firmware = await band.get_firmware()
-                self._update_device_firmware(state.firmware)
+            self._update_device_firmware(state.firmware)
 
             now = dt_util.now()
             if self.config_entry.options.get(CONF_SET_TIME, DEFAULT_SET_TIME):

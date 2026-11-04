@@ -73,7 +73,8 @@
   "entity": {
     "sensor": {
       "steps": {
-        "name": "Steps"
+        "name": "Steps",
+        "unit_of_measurement": "steps"
       },
       "calories": {
         "name": "Calories"

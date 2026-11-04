@@ -60,7 +60,6 @@ SENSORS: tuple[MiBandSensorDescription, ...] = (
     MiBandSensorDescription(
         key="steps",
         translation_key="steps",
-        native_unit_of_measurement="steps",
         state_class=SensorStateClass.TOTAL_INCREASING,
         value_fn=lambda d: d.steps,
     ),
@@ -68,6 +67,7 @@ SENSORS: tuple[MiBandSensorDescription, ...] = (
         key="distance",
         device_class=SensorDeviceClass.DISTANCE,
         native_unit_of_measurement=UnitOfLength.METERS,
+        suggested_display_precision=0,
         state_class=SensorStateClass.TOTAL_INCREASING,
         value_fn=lambda d: d.distance_m,
     ),

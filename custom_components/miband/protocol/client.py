@@ -292,7 +292,8 @@ class MiBandClient:
     async def get_firmware(self) -> str | None:
         try:
             raw = await self._client.read_gatt_char(CHAR_FIRMWARE_REVISION)
-        except Exception:  # noqa: BLE001
+        except Exception as err:  # noqa: BLE001
+            _LOGGER.debug("Lecture de la version du firmware impossible : %r", err)
             return None
         return bytes(raw).decode("ascii", "ignore").strip("\x00 ") or None
 
