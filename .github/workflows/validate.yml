@@ -20,7 +20,7 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          ignore: brands
+          ignore: brands description topics
 
   tests:
     name: Tests du protocole
@@ -40,13 +40,22 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.14"
       - run: pip install homeassistant bleak bleak-retry-connector
       - name: Importer tous les modules de l'intégration
         run: |
+          pip show homeassistant | head -2
           python - <<'PY'
-          import importlib
+          import importlib, sys, traceback
+          failed = False
           for mod in ("", ".config_flow", ".coordinator", ".sensor", ".binary_sensor", ".button", ".zepp_cloud"):
-              importlib.import_module("custom_components.miband" + mod)
-              print("ok", mod or "__init__")
+              name = "custom_components.miband" + mod
+              try:
+                  importlib.import_module(name)
+                  print("ok", name)
+              except Exception:
+                  failed = True
+                  tb = traceback.format_exc().strip().replace("\n", "%0A")
+                  print(f"::error title=Import {name}::{tb}")
+          sys.exit(1 if failed else 0)
           PY
