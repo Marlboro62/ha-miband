@@ -211,3 +211,18 @@ def test_wrong_key_is_rejected():
 
     with pytest.raises(MiBandAuthError):
         _run(scenario())
+
+
+def test_firmware_read_and_missing_characteristic():
+    band = FakeBand(AUTH_KEY)
+    assert _run(MiBandClient(band, AUTH_KEY).get_firmware()) == "2.1.0.13"
+
+    class _NoDeviceInfo:
+        def get_characteristic(self, uuid):
+            return None
+
+        def get_service(self, uuid):
+            return None
+
+    band.services = _NoDeviceInfo()
+    assert _run(MiBandClient(band, AUTH_KEY).get_firmware()) is None

@@ -210,10 +210,12 @@ class MiBandCoordinator(DataUpdateCoordinator[MiBandData]):
                 pass
 
     def _update_device_firmware(self, firmware: str | None) -> None:
-        registry = dr.async_get(self.hass)
-        device = registry.async_get_device(identifiers={(DOMAIN, self.address)})
-        if device is not None and firmware and device.sw_version != firmware:
-            registry.async_update_device(device.id, sw_version=firmware)
+        if firmware:
+            dr.async_get(self.hass).async_get_or_create(
+                config_entry_id=self.config_entry.entry_id,
+                identifiers={(DOMAIN, self.address)},
+                sw_version=firmware,
+            )
 
     def _merge(self, samples: list[ActivitySample]) -> None:
         for sample in samples:

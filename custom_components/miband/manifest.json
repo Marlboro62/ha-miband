@@ -15,5 +15,5 @@
   "issue_tracker": "https://github.com/Marlboro62/ha-miband/issues",
   "loggers": ["custom_components.miband"],
   "requirements": [],
-  "version": "0.1.0b3"
+  "version": "0.1.0b4"
 }

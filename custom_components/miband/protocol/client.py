@@ -24,6 +24,8 @@ from .const import (
     CHAR_CURRENT_TIME,
     CHAR_FETCH,
     CHAR_FIRMWARE_REVISION,
+    CHAR_SOFTWARE_REVISION,
+    SERVICE_DEVICE_INFORMATION,
     CONNECTION_MTU_REQUEST,
     CONNECTION_MTU_RESPONSE,
     CONNECTION_PING,
@@ -290,12 +292,24 @@ class MiBandClient:
         return parse_steps(payload)
 
     async def get_firmware(self) -> str | None:
+        """Version du firmware (révision firmware, sinon logicielle, du service Device Information)."""
+        for char in (CHAR_FIRMWARE_REVISION, CHAR_SOFTWARE_REVISION):
+            try:
+                if self._client.services.get_characteristic(char) is None:
+                    continue
+                raw = await self._client.read_gatt_char(char)
+            except Exception as err:  # noqa: BLE001
+                _LOGGER.debug("Lecture de %s impossible : %r", char, err)
+                continue
+            if value := bytes(raw).decode("ascii", "ignore").strip("\x00 "):
+                return value
         try:
-            raw = await self._client.read_gatt_char(CHAR_FIRMWARE_REVISION)
-        except Exception as err:  # noqa: BLE001
-            _LOGGER.debug("Lecture de la version du firmware impossible : %r", err)
-            return None
-        return bytes(raw).decode("ascii", "ignore").strip("\x00 ") or None
+            service = self._client.services.get_service(SERVICE_DEVICE_INFORMATION)
+            chars = [c.uuid for c in service.characteristics] if service else None
+        except Exception:  # noqa: BLE001
+            chars = None
+        _LOGGER.debug("Version du firmware non exposée (Device Information : %s)", chars)
+        return None
 
     async def set_time(self, now: datetime) -> None:
         await self._write(CHAR_CURRENT_TIME, encode_current_time(now))
