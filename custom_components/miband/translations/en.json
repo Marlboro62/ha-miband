@@ -8,12 +8,16 @@
       },
       "user": {
         "title": "Choose the band",
-        "data": { "address": "Band" }
+        "data": {
+          "address": "Band"
+        }
       },
       "manual_address": {
         "title": "Band address",
         "description": "Bluetooth MAC address of the band (shown in Zepp Life or in the band settings).",
-        "data": { "address": "MAC address" }
+        "data": {
+          "address": "MAC address"
+        }
       },
       "key": {
         "title": "Authentication key",
@@ -34,7 +38,9 @@
       "manual_key": {
         "title": "Enter the key",
         "description": "32 hexadecimal characters key of the band {address}, with or without the 0x prefix (for example obtained with huami-token).",
-        "data": { "auth_key": "Authentication key" }
+        "data": {
+          "auth_key": "Authentication key"
+        }
       }
     },
     "error": {
@@ -66,30 +72,73 @@
   },
   "entity": {
     "sensor": {
-      "steps": { "name": "Steps" },
-      "calories": { "name": "Calories" },
+      "steps": {
+        "name": "Steps"
+      },
+      "calories": {
+        "name": "Calories"
+      },
       "heart_rate": {
         "name": "Heart rate",
-        "state_attributes": { "measured_at": { "name": "Measured at" } }
+        "state_attributes": {
+          "measured_at": {
+            "name": "Measured at"
+          }
+        }
       },
-      "heart_rate_min": { "name": "Heart rate min today" },
-      "heart_rate_max": { "name": "Heart rate max today" },
-      "heart_rate_avg": { "name": "Heart rate average today" },
-      "sleep_total": { "name": "Total sleep" },
-      "sleep_deep": { "name": "Deep sleep" },
-      "sleep_light": { "name": "Light sleep" },
-      "sleep_rem": { "name": "REM sleep" },
-      "sleep_awake": { "name": "Awake during night" },
-      "sleep_start": { "name": "Fell asleep" },
-      "sleep_end": { "name": "Woke up" },
-      "last_sync": { "name": "Last sync" }
+      "heart_rate_min": {
+        "name": "Heart rate min today"
+      },
+      "heart_rate_max": {
+        "name": "Heart rate max today"
+      },
+      "heart_rate_avg": {
+        "name": "Heart rate average today"
+      },
+      "sleep_total": {
+        "name": "Total sleep"
+      },
+      "sleep_deep": {
+        "name": "Deep sleep"
+      },
+      "sleep_light": {
+        "name": "Light sleep"
+      },
+      "sleep_rem": {
+        "name": "REM sleep"
+      },
+      "sleep_awake": {
+        "name": "Awake during night"
+      },
+      "sleep_start": {
+        "name": "Fell asleep"
+      },
+      "sleep_end": {
+        "name": "Woke up"
+      },
+      "last_sync": {
+        "name": "Last sync"
+      }
     },
     "binary_sensor": {
-      "asleep": { "name": "Asleep" },
-      "worn": { "name": "Worn" }
+      "asleep": {
+        "name": "Asleep"
+      },
+      "worn": {
+        "name": "Worn"
+      }
     },
     "button": {
-      "sync": { "name": "Sync now" }
+      "sync": {
+        "name": "Sync now"
+      }
+    }
+  },
+  "selector": {
+    "address": {
+      "options": {
+        "manual": "Enter the MAC address manually"
+      }
     }
   }
 }

@@ -1,5 +1,9 @@
 name: Validation
 
+# Contrôles à chaque push ; sur main, une fois tout réussi, création du tag v<version du manifest>
+# et de la release s'ils n'existent pas (version « …bN » = pré-version).
+# Notes de version : .github/release-notes/v<version>.md.
+
 on:
   push:
   pull_request:
@@ -20,7 +24,6 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          ignore: brands description topics
 
   tests:
     name: Tests du protocole
@@ -56,7 +59,7 @@ jobs:
           python - <<'PY'
           import importlib, sys, traceback
           failed = False
-          for mod in ("", ".config_flow", ".coordinator", ".sensor", ".binary_sensor", ".button", ".zepp_cloud"):
+          for mod in ("", ".config_flow", ".coordinator", ".sensor", ".binary_sensor", ".button", ".diagnostics", ".zepp_cloud"):
               name = "custom_components.miband" + mod
               try:
                   importlib.import_module(name)
@@ -67,3 +70,36 @@ jobs:
                   print(f"::error title=Import {name}::{tb}")
           sys.exit(1 if failed else 0)
           PY
+
+  release:
+    name: Release
+    needs: [hassfest, hacs, tests, ha-import]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Version du manifest
+        id: v
+        run: |
+          v=$(python3 -c "import json;print(json.load(open('custom_components/miband/manifest.json'))['version'])")
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          case "$v" in *b*|*a*|*rc*) echo "pre=true" >> "$GITHUB_OUTPUT" ;; *) echo "pre=false" >> "$GITHUB_OUTPUT" ;; esac
+      - name: Release déjà publiée ?
+        id: existe
+        run: |
+          if gh release view "v${{ steps.v.outputs.version }}" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "existe=oui" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Créer le tag et la release
+        if: steps.existe.outputs.existe != 'oui'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.v.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: Mi Band 7 ${{ steps.v.outputs.version }}
+          body_path: .github/release-notes/v${{ steps.v.outputs.version }}.md
+          prerelease: ${{ steps.v.outputs.pre }}

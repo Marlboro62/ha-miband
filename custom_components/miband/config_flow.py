@@ -21,6 +21,9 @@ from homeassistant.const import CONF_ADDRESS
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import (
+    SelectOptionDict,
+    SelectSelector,
+    SelectSelectorConfig,
     TextSelector,
     TextSelectorConfig,
     TextSelectorType,
@@ -98,7 +101,6 @@ class MiBandConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        errors: dict[str, str] = {}
         if user_input is not None:
             choice = user_input[CONF_ADDRESS]
             if choice == MANUAL_ENTRY:
@@ -114,11 +116,20 @@ class MiBandConfigFlow(ConfigFlow, domain=DOMAIN):
         if not self._discovered:
             return await self.async_step_manual_address()
 
-        options = {**self._discovered, MANUAL_ENTRY: "Saisir l'adresse MAC à la main"}
+        options = [
+            SelectOptionDict(value=address, label=label)
+            for address, label in self._discovered.items()
+        ]
+        options.append(SelectOptionDict(value=MANUAL_ENTRY, label=MANUAL_ENTRY))
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema({vol.Required(CONF_ADDRESS): vol.In(options)}),
-            errors=errors,
+            data_schema=vol.Schema(
+                {
+                    vol.Required(CONF_ADDRESS): SelectSelector(
+                        SelectSelectorConfig(options=options, translation_key="address")
+                    )
+                }
+            ),
         )
 
     async def async_step_manual_address(

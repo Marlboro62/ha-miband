@@ -14,6 +14,7 @@ from homeassistant.components import bluetooth
 from homeassistant.const import CONF_ADDRESS
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.storage import Store
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.util import dt as dt_util
@@ -88,6 +89,10 @@ class MiBandCoordinator(DataUpdateCoordinator[MiBandData]):
         self._last_sample_ts: int | None = None
         self._lock = asyncio.Lock()
         self._state = MiBandData()
+
+    @property
+    def samples(self) -> dict[int, ActivitySample]:
+        return self._samples
 
     # ---------------------------------------------------------------- persistance
 
@@ -168,6 +173,7 @@ class MiBandCoordinator(DataUpdateCoordinator[MiBandData]):
 
             if state.firmware is None:
                 state.firmware = await band.get_firmware()
+                self._update_device_firmware(state.firmware)
 
             now = dt_util.now()
             if self.config_entry.options.get(CONF_SET_TIME, DEFAULT_SET_TIME):
@@ -202,6 +208,12 @@ class MiBandCoordinator(DataUpdateCoordinator[MiBandData]):
                 await client.disconnect()
             except BleakError:
                 pass
+
+    def _update_device_firmware(self, firmware: str | None) -> None:
+        registry = dr.async_get(self.hass)
+        device = registry.async_get_device(identifiers={(DOMAIN, self.address)})
+        if device is not None and firmware and device.sw_version != firmware:
+            registry.async_update_device(device.id, sw_version=firmware)
 
     def _merge(self, samples: list[ActivitySample]) -> None:
         for sample in samples:

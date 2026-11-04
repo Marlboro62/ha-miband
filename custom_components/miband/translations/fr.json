@@ -8,12 +8,16 @@
       },
       "user": {
         "title": "Choisir le bracelet",
-        "data": { "address": "Bracelet" }
+        "data": {
+          "address": "Bracelet"
+        }
       },
       "manual_address": {
         "title": "Adresse du bracelet",
         "description": "Adresse MAC Bluetooth du bracelet (visible dans Zepp Life ou dans les réglages du bracelet).",
-        "data": { "address": "Adresse MAC" }
+        "data": {
+          "address": "Adresse MAC"
+        }
       },
       "key": {
         "title": "Clé d'authentification",
@@ -34,7 +38,9 @@
       "manual_key": {
         "title": "Saisir la clé",
         "description": "Clé de 32 caractères hexadécimaux du bracelet {address}, avec ou sans le préfixe 0x (obtenue par exemple avec huami-token).",
-        "data": { "auth_key": "Clé d'authentification" }
+        "data": {
+          "auth_key": "Clé d'authentification"
+        }
       }
     },
     "error": {
@@ -66,30 +72,73 @@
   },
   "entity": {
     "sensor": {
-      "steps": { "name": "Pas" },
-      "calories": { "name": "Calories" },
+      "steps": {
+        "name": "Pas"
+      },
+      "calories": {
+        "name": "Calories"
+      },
       "heart_rate": {
         "name": "Fréquence cardiaque",
-        "state_attributes": { "measured_at": { "name": "Mesurée à" } }
+        "state_attributes": {
+          "measured_at": {
+            "name": "Mesurée à"
+          }
+        }
       },
-      "heart_rate_min": { "name": "FC minimum du jour" },
-      "heart_rate_max": { "name": "FC maximum du jour" },
-      "heart_rate_avg": { "name": "FC moyenne du jour" },
-      "sleep_total": { "name": "Sommeil total" },
-      "sleep_deep": { "name": "Sommeil profond" },
-      "sleep_light": { "name": "Sommeil léger" },
-      "sleep_rem": { "name": "Sommeil paradoxal" },
-      "sleep_awake": { "name": "Éveil nocturne" },
-      "sleep_start": { "name": "Endormissement" },
-      "sleep_end": { "name": "Réveil" },
-      "last_sync": { "name": "Dernière synchronisation" }
+      "heart_rate_min": {
+        "name": "FC minimum du jour"
+      },
+      "heart_rate_max": {
+        "name": "FC maximum du jour"
+      },
+      "heart_rate_avg": {
+        "name": "FC moyenne du jour"
+      },
+      "sleep_total": {
+        "name": "Sommeil total"
+      },
+      "sleep_deep": {
+        "name": "Sommeil profond"
+      },
+      "sleep_light": {
+        "name": "Sommeil léger"
+      },
+      "sleep_rem": {
+        "name": "Sommeil paradoxal"
+      },
+      "sleep_awake": {
+        "name": "Éveil nocturne"
+      },
+      "sleep_start": {
+        "name": "Endormissement"
+      },
+      "sleep_end": {
+        "name": "Réveil"
+      },
+      "last_sync": {
+        "name": "Dernière synchronisation"
+      }
     },
     "binary_sensor": {
-      "asleep": { "name": "Endormi" },
-      "worn": { "name": "Porté" }
+      "asleep": {
+        "name": "Endormi"
+      },
+      "worn": {
+        "name": "Porté"
+      }
     },
     "button": {
-      "sync": { "name": "Synchroniser maintenant" }
+      "sync": {
+        "name": "Synchroniser maintenant"
+      }
+    }
+  },
+  "selector": {
+    "address": {
+      "options": {
+        "manual": "Saisir l'adresse MAC à la main"
+      }
     }
   }
 }

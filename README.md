@@ -59,8 +59,12 @@ La fréquence cardiaque provient de la **mesure automatique toute la journée** 
 
 ### Avec HACS
 
-1. HACS → menu ⋮ → **Dépôts personnalisés** → ajoutez `https://github.com/Marlboro62/ha-miband`, catégorie **Intégration**.
-2. Installez **Mi Band 7** (cochez « Afficher les versions bêta » si besoin), puis redémarrez Home Assistant.
+[![Ouvrir dans HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=Marlboro62&repository=ha-miband&category=integration)
+
+1. Dans HACS, cherchez **Mi Band 7** et installez-la (ou utilisez le bouton ci-dessus).
+2. Redémarrez Home Assistant.
+
+Si l'intégration n'apparaît pas encore dans la recherche : HACS → menu ⋮ → **Dépôts personnalisés** → `https://github.com/Marlboro62/ha-miband`, catégorie **Intégration**.
 
 ### Manuelle
 

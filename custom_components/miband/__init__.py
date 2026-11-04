@@ -5,7 +5,9 @@ from __future__ import annotations
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.storage import Store
 
+from .const import DOMAIN, STORAGE_VERSION
 from .coordinator import MiBandCoordinator
 
 PLATFORMS: list[Platform] = [Platform.BINARY_SENSOR, Platform.BUTTON, Platform.SENSOR]
@@ -35,3 +37,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: MiBandConfigEntry) -> b
 
 async def _async_reload(hass: HomeAssistant, entry: MiBandConfigEntry) -> None:
     await hass.config_entries.async_reload(entry.entry_id)
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: MiBandConfigEntry) -> None:
+    """Supprime l'historique enregistré du bracelet."""
+    await Store(hass, STORAGE_VERSION, f"{DOMAIN}.{entry.entry_id}").async_remove()
