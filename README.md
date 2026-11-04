@@ -31,9 +31,6 @@
 
 Intégration Home Assistant qui récupère les données du **Xiaomi Mi Band 7** **directement en Bluetooth**, sans passer par le cloud : batterie, pas, distance, calories, fréquence cardiaque et sommeil. Elle fonctionne avec l'adaptateur Bluetooth de Home Assistant **ou les proxys Bluetooth ESPHome**.
 
-> [!WARNING]
-> **Version bêta.** Le protocole Zepp OS a été réimplémenté et testé contre un bracelet simulé, mais pas encore sur tous les firmwares. Testez d'abord sur une instance de test et ouvrez une [issue](https://github.com/Marlboro62/ha-miband/issues) avec les journaux en cas de souci.
-
 ## Ce que vous obtenez
 
 | Entité | Détail |
