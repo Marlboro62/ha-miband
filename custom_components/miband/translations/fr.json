@@ -1,0 +1,95 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "bluetooth_confirm": {
+        "title": "Mi Band détecté",
+        "description": "Configurer {name} ({address}) ?\n\nLe bracelet ne doit plus être connecté à l'appli Zepp Life du téléphone (retirez-lui l'accès Bluetooth, sans désappairer le bracelet)."
+      },
+      "user": {
+        "title": "Choisir le bracelet",
+        "data": { "address": "Bracelet" }
+      },
+      "manual_address": {
+        "title": "Adresse du bracelet",
+        "description": "Adresse MAC Bluetooth du bracelet (visible dans Zepp Life ou dans les réglages du bracelet).",
+        "data": { "address": "Adresse MAC" }
+      },
+      "key": {
+        "title": "Clé d'authentification",
+        "description": "Le bracelet n'accepte que les connexions qui connaissent sa clé d'appairage. Elle peut être récupérée automatiquement depuis le compte Zepp, ou saisie à la main.",
+        "menu_options": {
+          "zepp": "Récupérer la clé avec mon compte Zepp",
+          "manual_key": "Saisir la clé à la main"
+        }
+      },
+      "zepp": {
+        "title": "Compte Zepp",
+        "description": "Identifiants du compte Zepp / Zepp Life auquel le bracelet {address} est appairé (connexion par e-mail et mot de passe). Ils servent uniquement à récupérer la clé et ne sont pas enregistrés.",
+        "data": {
+          "email": "E-mail",
+          "password": "Mot de passe"
+        }
+      },
+      "manual_key": {
+        "title": "Saisir la clé",
+        "description": "Clé de 32 caractères hexadécimaux du bracelet {address}, avec ou sans le préfixe 0x (obtenue par exemple avec huami-token).",
+        "data": { "auth_key": "Clé d'authentification" }
+      }
+    },
+    "error": {
+      "invalid_mac": "Adresse MAC invalide (format AA:BB:CC:DD:EE:FF).",
+      "invalid_key": "Clé invalide : 32 caractères hexadécimaux attendus.",
+      "invalid_auth": "Identifiants Zepp refusés. Les comptes connectés via Google ou Xiaomi ne sont pas pris en charge : saisissez la clé à la main.",
+      "cannot_connect": "Le cloud Zepp est injoignable, réessayez plus tard.",
+      "device_not_found": "Aucune clé trouvée pour ce bracelet sur ce compte. Vérifiez qu'il a bien été appairé et synchronisé avec ce compte, ou saisissez la clé à la main."
+    },
+    "abort": {
+      "already_configured": "Ce bracelet est déjà configuré.",
+      "reauth_successful": "Nouvelle clé enregistrée."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options du Mi Band",
+        "data": {
+          "scan_interval": "Intervalle de synchronisation (minutes)",
+          "set_time": "Mettre le bracelet à l'heure de Home Assistant"
+        },
+        "data_description": {
+          "scan_interval": "Chaque synchronisation se connecte au bracelet puis se déconnecte. Un intervalle court use un peu plus la batterie du bracelet.",
+          "set_time": "Utile puisque le téléphone ne synchronise plus l'heure du bracelet."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "steps": { "name": "Pas" },
+      "calories": { "name": "Calories" },
+      "heart_rate": {
+        "name": "Fréquence cardiaque",
+        "state_attributes": { "measured_at": { "name": "Mesurée à" } }
+      },
+      "heart_rate_min": { "name": "FC minimum du jour" },
+      "heart_rate_max": { "name": "FC maximum du jour" },
+      "heart_rate_avg": { "name": "FC moyenne du jour" },
+      "sleep_total": { "name": "Sommeil total" },
+      "sleep_deep": { "name": "Sommeil profond" },
+      "sleep_light": { "name": "Sommeil léger" },
+      "sleep_rem": { "name": "Sommeil paradoxal" },
+      "sleep_awake": { "name": "Éveil nocturne" },
+      "sleep_start": { "name": "Endormissement" },
+      "sleep_end": { "name": "Réveil" },
+      "last_sync": { "name": "Dernière synchronisation" }
+    },
+    "binary_sensor": {
+      "asleep": { "name": "Endormi" },
+      "worn": { "name": "Porté" }
+    },
+    "button": {
+      "sync": { "name": "Synchroniser maintenant" }
+    }
+  }
+}

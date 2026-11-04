@@ -1,0 +1,19 @@
+{
+  "domain": "miband",
+  "name": "Mi Band 7",
+  "bluetooth": [
+    { "local_name": "Xiaomi Smart Band 7*", "connectable": true },
+    { "local_name": "Mi Smart Band 7*", "connectable": true },
+    { "local_name": "Amazfit Band 7*", "connectable": true }
+  ],
+  "codeowners": ["@Marlboro62"],
+  "config_flow": true,
+  "dependencies": ["bluetooth_adapters"],
+  "documentation": "https://github.com/Marlboro62/ha-miband",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/Marlboro62/ha-miband/issues",
+  "loggers": ["custom_components.miband"],
+  "requirements": [],
+  "version": "0.1.0-beta.1"
+}
