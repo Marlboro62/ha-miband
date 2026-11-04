@@ -201,8 +201,10 @@ class MiBandClient:
         await self._discover_services()
 
     async def authenticate(self) -> None:
+        loop = asyncio.get_running_loop()
         private = ecdh.generate_private_key()
-        public = ecdh.public_key(private)
+        # multiplications scalaires en Python pur sur GF(2^163) : hors de la boucle d'événements
+        public = await loop.run_in_executor(None, ecdh.public_key, private)
         reply = await self.request(
             ENDPOINT_AUTH,
             bytes([0x04, 0x02, 0x00, 0x02]) + public,
@@ -214,9 +216,7 @@ class MiBandClient:
 
         remote_random = reply[3:19]
         remote_public = reply[19:67]
-        shared = await asyncio.get_running_loop().run_in_executor(
-            None, ecdh.shared_secret, private, remote_public
-        )
+        shared = await loop.run_in_executor(None, ecdh.shared_secret, private, remote_public)
         sequence = struct.unpack_from("<I", shared, 0)[0]
         session_key = bytes(shared[8 + i] ^ self._auth_key[i] for i in range(16))
         self._encoder.set_encryption(sequence, session_key)
