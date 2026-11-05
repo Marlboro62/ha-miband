@@ -1,8 +1,10 @@
+# Adapté de huami-token (https://codeberg.org/argrento/huami-token)
+# Copyright (c) 2020-2025 Kirill Snezhko
+# Licence MIT : le texte complet de la licence se trouve dans le fichier NOTICE.
 """Récupération de la clé d'authentification BLE depuis le compte Zepp.
 
-Reprend la séquence de connexion de huami-token (licence MIT,
-https://codeberg.org/argrento/huami-token). Le mot de passe n'est utilisé
-que le temps de l'appel et n'est jamais enregistré.
+Reprend la séquence de connexion de huami-token. Le mot de passe n'est
+utilisé que le temps de l'appel et n'est jamais enregistré.
 """
 
 from __future__ import annotations

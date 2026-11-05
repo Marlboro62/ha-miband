@@ -111,6 +111,8 @@ Pour toute question ou problème : [issues GitHub](https://github.com/Marlboro62
 
 ## Remerciements et licence
 
+La connexion au compte Zepp (`zepp_cloud.py`) est adaptée de [huami-token](https://codeberg.org/argrento/huami-token), © 2020-2025 Kirill Snezhko, licence MIT : voir le fichier [`NOTICE`](NOTICE).
+
 Le protocole Bluetooth Zepp OS est documenté grâce au travail du projet [Gadgetbridge](https://codeberg.org/Freeyourgadget/Gadgetbridge) (AGPL-3.0) ; la récupération de clé reprend la séquence de [huami-token](https://codeberg.org/argrento/huami-token) (MIT). Projet sans lien avec Xiaomi, Zepp Health ou Amazfit.
 
 Licence : [GNU AGPL-3.0](LICENSE).
