@@ -1,0 +1,145 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "bluetooth_confirm": {
+        "title": "Pronađena Mi Band narukvica",
+        "description": "Podesiti {name} ({address})?\n\nNarukvica više ne sme biti povezana sa telefonskom aplikacijom Zepp Life (opozovite joj Bluetooth pristup, ali nemojte rasparivati narukvicu)."
+      },
+      "user": {
+        "title": "Izaberite narukvicu",
+        "data": {
+          "address": "Narukvica"
+        }
+      },
+      "manual_address": {
+        "title": "Adresa narukvice",
+        "description": "Bluetooth MAC adresa narukvice (prikazana u Zepp Life ili u podešavanjima narukvice).",
+        "data": {
+          "address": "MAC adresa"
+        }
+      },
+      "key": {
+        "title": "Ključ za autentifikaciju",
+        "description": "Narukvica prihvata samo veze koje znaju njen ključ za uparivanje. Može se preuzeti automatski sa Zepp naloga ili uneti ručno.",
+        "menu_options": {
+          "zepp": "Preuzmi ključ putem mog Zepp naloga",
+          "manual_key": "Unesi ključ ručno"
+        }
+      },
+      "zepp": {
+        "title": "Zepp nalog",
+        "description": "Podaci za prijavu na Zepp / Zepp Life nalog sa kojim je narukvica {address} uparena (prijava putem e-pošte i lozinke). Koriste se samo za preuzimanje ključa i ne čuvaju se.",
+        "data": {
+          "email": "E-pošta",
+          "password": "Lozinka"
+        }
+      },
+      "manual_key": {
+        "title": "Unesite ključ",
+        "description": "Ključ narukvice {address} od 32 heksadecimalna znaka, sa ili bez prefiksa 0x (na primer, dobijen pomoću huami-token).",
+        "data": {
+          "auth_key": "Ključ za autentifikaciju"
+        }
+      }
+    },
+    "error": {
+      "invalid_mac": "Nevažeća MAC adresa (format AA:BB:CC:DD:EE:FF).",
+      "invalid_key": "Nevažeći ključ: očekuje se 32 heksadecimalna znaka.",
+      "invalid_auth": "Zepp podaci za prijavu su odbijeni. Nalozi prijavljeni preko Google-a ili Xiaomi-ja nisu podržani: unesite ključ ručno.",
+      "cannot_connect": "Nije moguće pristupiti Zepp oblaku, pokušajte ponovo kasnije.",
+      "device_not_found": "Nije pronađen ključ za ovu narukvicu na ovom nalogu. Proverite da li je uparena i sinhronizovana sa ovim nalogom ili unesite ključ ručno."
+    },
+    "abort": {
+      "already_configured": "Ova narukvica je već konfigurisana.",
+      "reauth_successful": "Novi ključ je sačuvan."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opcije za Mi Band",
+        "data": {
+          "scan_interval": "Interval sinhronizacije (minuti)",
+          "set_time": "Postavi vreme narukvice na vreme Home Assistant-a"
+        },
+        "data_description": {
+          "scan_interval": "Svaka sinhronizacija se povezuje sa narukvicom, a zatim prekida vezu. Kraći interval troši malo više baterije narukvice.",
+          "set_time": "Korisno jer telefon više ne sinhronizuje sat narukvice."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "steps": {
+        "name": "Koraci",
+        "unit_of_measurement": "koraka"
+      },
+      "calories": {
+        "name": "Kalorije"
+      },
+      "heart_rate": {
+        "name": "Puls",
+        "state_attributes": {
+          "measured_at": {
+            "name": "Izmereno u"
+          }
+        }
+      },
+      "heart_rate_min": {
+        "name": "Minimalni puls danas"
+      },
+      "heart_rate_max": {
+        "name": "Maksimalni puls danas"
+      },
+      "heart_rate_avg": {
+        "name": "Prosečan puls danas"
+      },
+      "sleep_total": {
+        "name": "Ukupno spavanje"
+      },
+      "sleep_deep": {
+        "name": "Dubok san"
+      },
+      "sleep_light": {
+        "name": "Lagan san"
+      },
+      "sleep_rem": {
+        "name": "REM faza sna"
+      },
+      "sleep_awake": {
+        "name": "Budnost tokom noći"
+      },
+      "sleep_start": {
+        "name": "Vreme zaspanja"
+      },
+      "sleep_end": {
+        "name": "Vreme buđenja"
+      },
+      "last_sync": {
+        "name": "Poslednja sinhronizacija"
+      }
+    },
+    "binary_sensor": {
+      "asleep": {
+        "name": "Spava"
+      },
+      "worn": {
+        "name": "Na ruci"
+      }
+    },
+    "button": {
+      "sync": {
+        "name": "Sinhronizuj sada"
+      }
+    }
+  },
+  "selector": {
+    "address": {
+      "options": {
+        "manual": "Ručno unesite MAC adresu"
+      }
+    }
+  }
+}
