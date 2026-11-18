@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any
@@ -47,6 +48,15 @@ _LOGGER = logging.getLogger(__name__)
 
 CONNECT_TIMEOUT = 30
 SYNC_TIMEOUT = 180
+# Une seule tentative de connexion par synchro : des essais rapprochés à travers un proxy ESPHome arrivent
+# pendant que le proxy termine le précédent (« gatt_connect wrong state »), et le proxy coupe alors sa liaison
+# avec Home Assistant. La synchro suivante prend le relais.
+CONNECT_ATTEMPTS = 1
+# Après des échecs, la synchro suivante est espacée : 1, 2, 4 puis 6 fois l'intervalle choisi (60 min au plus)
+BACKOFF_FACTORS = (1, 2, 4, 6)
+MAX_BACKOFF = timedelta(minutes=60)
+# Bracelet pas vu depuis ce délai par un adaptateur ou un proxy : pas de tentative de connexion
+SEEN_RECENTLY = 600  # secondes
 
 
 @dataclass
@@ -89,6 +99,8 @@ class MiBandCoordinator(DataUpdateCoordinator[MiBandData]):
         self._last_sample_ts: int | None = None
         self._lock = asyncio.Lock()
         self._state = MiBandData()
+        self._failures = 0
+        self._next_attempt: datetime | None = None
 
     @property
     def samples(self) -> dict[int, ActivitySample]:
@@ -138,12 +150,27 @@ class MiBandCoordinator(DataUpdateCoordinator[MiBandData]):
     # ------------------------------------------------------------------ synchro
 
     async def _async_update_data(self) -> MiBandData:
+        # Échecs récents : attendre le moment prévu avant de solliciter de nouveau le proxy
+        if self._next_attempt is not None and dt_util.utcnow() < self._next_attempt:
+            raise UpdateFailed(
+                f"Synchronisation en attente après {self._failures} échec(s), prochaine tentative à "
+                f"{dt_util.as_local(self._next_attempt):%H:%M}"
+            )
+
         ble_device = bluetooth.async_ble_device_from_address(
             self.hass, self.address, connectable=True
         )
         if ble_device is None:
+            self._record_failure()
             raise UpdateFailed(
                 f"Bracelet {self.address} hors de portée de tout adaptateur ou proxy Bluetooth actif"
+            )
+        info = bluetooth.async_last_service_info(self.hass, self.address, connectable=True)
+        if info is not None and time.monotonic() - info.time > SEEN_RECENTLY:
+            self._record_failure()
+            raise UpdateFailed(
+                f"Bracelet {self.address} pas vu depuis {int((time.monotonic() - info.time) // 60)} min "
+                "par un adaptateur ou un proxy Bluetooth : pas de tentative de connexion"
             )
 
         async with self._lock:
@@ -153,17 +180,33 @@ class MiBandCoordinator(DataUpdateCoordinator[MiBandData]):
             except MiBandAuthError as err:
                 raise ConfigEntryAuthFailed(str(err)) from err
             except (MiBandError, BleakError, TimeoutError) as err:
+                self._record_failure()
                 raise UpdateFailed(f"Synchronisation impossible : {err}") from err
 
+        self._failures = 0
+        self._next_attempt = None
         self._store.async_delay_save(self._data_to_store, SAVE_DELAY)
         return self._state
+
+    async def async_sync_now(self) -> None:
+        """Synchro demandée à la main (bouton) : sans attendre la fin de l'espacement après un échec."""
+        self._next_attempt = None
+        await self.async_request_refresh()
+
+    def _record_failure(self) -> None:
+        """Échec : la prochaine tentative est repoussée de plus en plus (jusqu'à MAX_BACKOFF)."""
+        self._failures += 1
+        factor = BACKOFF_FACTORS[min(self._failures, len(BACKOFF_FACTORS)) - 1]
+        delay = min((self.update_interval or timedelta(minutes=10)) * factor, MAX_BACKOFF)
+        # moins une minute : la synchro planifiée qui tombe juste après l'échéance n'est pas sautée
+        self._next_attempt = dt_util.utcnow() + delay - timedelta(minutes=1)
 
     async def _sync(self, ble_device: Any) -> None:
         client = await establish_connection(
             BleakClientWithServiceCache,
             ble_device,
             self.address,
-            max_attempts=3,
+            max_attempts=CONNECT_ATTEMPTS,
             timeout=CONNECT_TIMEOUT,
         )
         try:

@@ -26,4 +26,4 @@ class MiBandSyncButton(MiBandEntity, ButtonEntity):
         return True
 
     async def async_press(self) -> None:
-        await self.coordinator.async_request_refresh()
+        await self.coordinator.async_sync_now()
